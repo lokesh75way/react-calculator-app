@@ -1,6 +1,7 @@
 @import '~bootstrap/scss/bootstrap';
 @import './variables.scss';
 @import './mixins.scss';
+@import './breakpoints.scss';
 
 body {
   margin: 0;
@@ -13,8 +14,47 @@ body {
   cursor: pointer;
 }
 
-.remove-location {
+/******* Background colors *******/
+.bg-light-sky-blue {
+  background-color: $light_sky_blue;
+}
+
+/******* Text colors *******/
+.text-white {
+  color: $white;
+}
+.text-dark-blue {
+  color: $dark_blue;
+}
+.text-sky-blue {
+  color: $sky_blue;
+}
+
+/******* Table *******/
+.table {
+  color: $dark_blue;
+  th {
+    font-weight: 600;
+  }
+}
+
+.delete-icon {
+  border-color: $red_light !important;
   &:hover {
-    background-color: $light_grey;
+    background-color: $red;
+    svg {
+      color: $white !important;
+    }
+  }
+}
+
+/*******  calculator component *******/
+.calculator {
+  @include box-shadow(0px 1px 15px $light_sky_blue_shadow);
+}
+
+@include breakpoint-lt('sm') {
+  .calculator-submit {
+    width: 100%;
   }
 }

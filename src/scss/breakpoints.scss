@@ -1,0 +1,73 @@
+/// The base px size
+/// @type {px}
+$base-font-size: 16px !default;
+/// Convert a px value to em
+/// @param {px} $val - The desired px size
+/// @param {px} $ctx [$base-font-size] - The base px size
+/// @return {em} The px value in em
+@function em($val, $ctx: $base-font-size) {
+  //make sure the divider is not 0
+  @if $ctx == 0 {
+    @error 'sass-ems: Context cannot be `0`.';
+  }
+  //return a unit less 0 (best practice)
+  @if $val == 0 {
+    @return 0;
+  }
+  //make sure units are in px
+  @if (unit($val) != 'px' or unit($val) != 'px') {
+    @error 'sass-ems: Units must be `px`.';
+  }
+  @return ($val / $ctx) * 1em;
+}
+$breakpoints: (
+  'xxs': 0px,
+  //targeting <480px devices
+  'xs': 480px,
+  //targeting >=480px devices
+  'sm': 576px,
+  //targeting >=576px devices
+  'md': 768px,
+  //targeting >=768px tablets
+  'lg': 992px,
+  //targeting >=992px tablets
+  'xl': 1200px //targeting >=1200px tablets,,,,,,,,,,,,,,
+);
+@mixin breakpoint-lt($to) {
+  @media (max-width: em(map-get($breakpoints, $to) - 1px, 16px)) {
+    @content;
+  }
+}
+@mixin breakpoint-lte($to) {
+  @media (max-width: em(map-get($breakpoints, $to), 16px)) {
+    @content;
+  }
+}
+@mixin breakpoint-gt($from) {
+  @media (min-width: em(map-get($breakpoints, $from) + 1, 16px)) {
+    @content;
+  }
+}
+@mixin breakpoint-gte($from) {
+  @media (min-width: em(map-get($breakpoints, $from), 16px)) {
+    @content;
+  }
+}
+@mixin breakpoint-between($from, $to) {
+  @media (min-width: em(map-get($breakpoints, $from) + 1, 16px)) and (max-width: em(map-get($breakpoints, $to) - 1, 16px)) {
+    @content;
+  }
+}
+@mixin breakpoint($from, $to: null) {
+  @if ($from and $to) {
+    @media (min-width: em(map-get($breakpoints, $from), 16px)) and (max-width: em(map-get($breakpoints, $to) - 1, 16px)) {
+      @content;
+    }
+  } @else if ($from) {
+    @include breakpoint-gte($from) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+} ;

@@ -51,7 +51,6 @@
     ]
   },
   "devDependencies": {
-    "babel-plugin-module-resolver": "^4.1.0",
     "sass": "^1.30.0"
   }
 }
