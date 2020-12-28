@@ -1,0 +1,76 @@
+{
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/href-no-hash": "off",
+    "import/prefer-default-export": "off",
+    "consistent-return": "warn",
+    "prefer-promise-reject-errors": "off",
+    "no-underscore-dangle": "off",
+    "no-nested-ternary": "warn",
+    "react/sort-prop-types": "error",
+    "eqeqeq": [
+      0
+    ],
+    "no-useless-concat": [
+      0
+    ],
+    "import/no-cycle": [
+      "off"
+    ],
+    "import/no-extraneous-dependencies": "error",
+    "import/no-nodejs-modules": "off",
+    "react/forbid-prop-types": [
+      "warn"
+    ],
+    "no-unused-vars": "error",
+    "react/no-unused-prop-types": "error",
+    "linebreak-style": "off",
+    "react/prop-types": [
+      "error",
+      {
+        "ignore": [
+          "match",
+          "history",
+          "location"
+        ]
+      }
+    ],
+    "prefer-destructuring": [
+      "error",
+      {
+        "object": true,
+        "array": false
+      }
+    ],
+    "no-console": [
+      "error",
+      {
+        "allow": [
+          "error",
+          "log"
+        ]
+      }
+    ]
+  },
+  "extends": [
+    "react-app",
+    "eslint-config-prettier",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
+  ],
+  "plugins": [
+    "eslint-plugin-prettier",
+    "react",
+    "jsx-a11y",
+    "import"
+  ]
+}
