@@ -6,11 +6,9 @@ import reportWebVitals from './reportWebVitals';
 import './scss/style.scss';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Router>
-      <Layout />
-    </Router>
-  </React.StrictMode>,
+  <Router>
+    <Layout />
+  </Router>,
   document.getElementById('root')
 );
 

@@ -13,10 +13,25 @@ body {
 .cursor-pointer {
   cursor: pointer;
 }
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
+
+.w-100px {
+  width: 100px;
+}
 
 /******* Background colors *******/
 .bg-light-sky-blue {
   background-color: $light_sky_blue;
+}
+
+/******* Fonts sizes *******/
+.font-12 {
+  font-size: 12px;
+}
+.font-14 {
+  font-size: 14px;
 }
 
 /******* Text colors *******/
@@ -48,9 +63,28 @@ body {
   }
 }
 
+/*******  map component *******/
+.gm-style-iw-t {
+  bottom: 40px !important;
+}
+.gm-ui-hover-effect {
+  display: none !important;
+}
+
 /*******  calculator component *******/
 .calculator {
   @include box-shadow(0px 1px 15px $light_sky_blue_shadow);
+}
+
+.calculator-table {
+  td,
+  th {
+    width: 100%;
+    vertical-align: middle;
+  }
+  .table-min-80 {
+    min-width: 80px;
+  }
 }
 
 @include breakpoint-lt('sm') {
