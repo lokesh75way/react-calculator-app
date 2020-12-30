@@ -2,17 +2,17 @@ import axios from 'axios';
 import { MESSAGES } from '../configs/constants';
 
 /**
- * Cancel Token
+ * CANCEL TOKEN
  */
 const { CancelToken } = axios;
 
 /**
- * Use to cancel Http Requests
+ * USED TO CANCEL HTTP REQUEST
  */
 let cancelHttpTokens = [];
 
 /**
- * Helper Params used in Request
+ * HELPER PARAM USED IN REQUEST
  */
 const HELPER_PARAMS = {
   callback: null, // Function|Null
@@ -21,7 +21,7 @@ const HELPER_PARAMS = {
 };
 
 /**
- * Get Common Headers
+ * THIS FUNCTION RETURNS THE COMMON HEADER
  *
  * @param {String} url
  * @param {Object} additional_headers
@@ -32,11 +32,9 @@ export const getCommonHeaders = (url, additional_headers = {}) => {
   try {
     const token = '';
     const { trace_name } = additional_headers;
-
     const light_step_headers = {
       'x-api-trace-name': trace_name,
     };
-
     const headers = {
       Accept: 'application/json',
       'Access-Control-Allow-Origin': '*',
@@ -45,7 +43,6 @@ export const getCommonHeaders = (url, additional_headers = {}) => {
       ...light_step_headers,
       ...additional_headers,
     };
-
     return headers;
   } catch (e) {
     return {};
@@ -53,11 +50,11 @@ export const getCommonHeaders = (url, additional_headers = {}) => {
 };
 
 /**
- * Extract JSON Response
+ * THIS FUNCTION IS USED TO EXTRACT COMMON JSON RESPONSE
  *
- * @param {JSON} json [JSON Data]
+ * @param {JSON} json [JSON DATA]
  *
- * @return {Object|String} Extarcted value or Blank Object
+ * @return {Object|String} EXTRACTED VALUE OR BLANK OBJECT
  */
 export const extractJSON = (json) => {
   try {
@@ -68,7 +65,7 @@ export const extractJSON = (json) => {
 };
 
 /**
- * Handle Success Response
+ * THIS FUNCTION HANDLES COMMON SUCCESS REPONSE
  *
  * @param {Object|Null} res
  *
@@ -83,7 +80,7 @@ export const httpHandleResponse = (res) => {
 };
 
 /**
- * Handle API Error Reponse
+ * THIS FUNCTION IS USED TO HANDLE COMMON API ERROR RESPONSE
  *
  * @param {Object|Null} error
  *
@@ -180,7 +177,7 @@ export const httpHandleError = (error) => {
 };
 
 /**
- * GET Request
+ * THIS COMMON FUNCTION IS USED TO CALL API REQUEST WHOSE REQUEST_METHOD=GET
  *
  * @param {String} url
  * @param {Object} `HELPER_PARAMS`
@@ -215,7 +212,7 @@ export const httpGet = async (
 };
 
 /**
- * POST Request
+ * THIS COMMON FUNCTION IS USED TO CALL API REQUEST WHOSE REQUEST_METHOD=POST
  *
  * @param {String} url
  * @param {Object} params
@@ -252,7 +249,7 @@ export const httpPost = (
 };
 
 /**
- * PUT Request
+ * THIS COMMON FUNCTION IS USED TO CALL API REQUEST WHOSE REQUEST_METHOD=PUT
  *
  * @param {String} url
  * @param {Object} params
@@ -289,7 +286,7 @@ export const httpPut = (
 };
 
 /**
- * DELETE Request
+ * THIS COMMON FUNCTION IS USED TO CALL API REQUEST WHOSE REQUEST_METHOD=DELETE
  *
  * @param {String} url
  * @param {Object} `HELPER_PARAMS`

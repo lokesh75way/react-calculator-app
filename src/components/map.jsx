@@ -14,13 +14,15 @@ const Map = compose(
   withProps({
     googleMapURL: process.env.REACT_APP_GOOGLE_KEY,
     loadingElement: <div style={{ height: `100%` }} />,
-    containerElement: <div style={{ height: `500px` }} />,
+    containerElement: (
+      <div style={{ height: `500px` }} className="map-container-element" />
+    ),
     mapElement: <div style={{ height: `100%` }} />,
   }),
   withScriptjs,
   withGoogleMap
 )((props) => {
-  const { isMarkerShown, data, addedLocations, addLocation } = props;
+  const { isMarkerShown, data, addedLocations, addLocation, closeMap } = props;
 
   return (
     <>
@@ -76,10 +78,20 @@ const Map = compose(
                 </div>
               );
             })}
+          <div className="map-go-back">
+            <Button
+              variant="success"
+              className="px-4"
+              size="sm"
+              onClick={closeMap}
+            >
+              Go Back
+            </Button>
+          </div>
         </GoogleMap>
       ) : (
         <div className="text-white text-center mt-2">
-          At least one location must be there
+          Sorry, Locations not found
         </div>
       )}
     </>

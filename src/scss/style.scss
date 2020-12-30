@@ -16,43 +16,6 @@ body {
 .cursor-not-allowed {
   cursor: not-allowed;
 }
-
-.w-100px {
-  width: 100px;
-}
-
-/******* Background colors *******/
-.bg-light-sky-blue {
-  background-color: $light_sky_blue;
-}
-
-/******* Fonts sizes *******/
-.font-12 {
-  font-size: 12px;
-}
-.font-14 {
-  font-size: 14px;
-}
-
-/******* Text colors *******/
-.text-white {
-  color: $white;
-}
-.text-dark-blue {
-  color: $dark_blue;
-}
-.text-sky-blue {
-  color: $sky_blue;
-}
-
-/******* Table *******/
-.table {
-  color: $dark_blue;
-  th {
-    font-weight: 600;
-  }
-}
-
 .delete-icon {
   border-color: $red_light !important;
   &:hover {
@@ -63,19 +26,108 @@ body {
   }
 }
 
-/*******  map component *******/
+.w-100px {
+  width: 100px;
+}
+
+/******* BACKGROUND COLORS *******/
+.bg-light-sky-blue {
+  background-color: $light_sky_blue;
+}
+
+/******* FONT SIZES *******/
+.font-12 {
+  font-size: 12px;
+}
+.font-14 {
+  font-size: 14px;
+}
+
+/******* TEXT COLORS *******/
+.text-white {
+  color: $white;
+}
+.text-dark-blue {
+  color: $dark_blue;
+}
+.text-sky-blue {
+  color: $sky_blue;
+}
+
+/******* TABLE *******/
+.table {
+  color: $dark_blue;
+  th {
+    font-weight: 600;
+  }
+}
+
+/******* DATEPICKER *******/
+.react-datepicker-wrapper {
+  width: 100%;
+  .react-datepicker__input-container {
+    input {
+      width: 100%;
+      display: block;
+      width: 100%;
+      height: calc(1.5em + 0.75rem + 2px);
+      padding: 0.375rem 0.75rem;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: $dim_grey;
+      background-color: $white;
+      background-clip: padding-box;
+      border: 1px solid $dim_cream;
+      @include border-radius(0.25rem);
+      @include transition(
+        border-color 0.15s ease-in-out box-shadow 0.15s ease-in-out
+      );
+      &:focus {
+        color: $dim_grey;
+        background-color: $white;
+        border-color: $dim_sky_blue;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+      }
+    }
+  }
+}
+.react-datepicker__triangle {
+  left: auto !important;
+  right: 15 !important;
+}
+
+/******* GOOGLE MAP *******/
 .gm-style-iw-t {
   bottom: 40px !important;
 }
 .gm-ui-hover-effect {
   display: none !important;
 }
+.map-go-back {
+  position: absolute;
+  bottom: 30px;
+  font-weight: 600;
+  left: 7px;
+}
+@include breakpoint-lt('md') {
+  .map-modal {
+    padding-left: 0px !important;
+    .modal-dialog {
+      max-width: unset;
+      margin: 0px;
+    }
+    .map-container-element {
+      height: 100vh !important;
+    }
+  }
+}
 
-/*******  calculator component *******/
+/******* CALCULATOR COMPONENT *******/
 .calculator {
   @include box-shadow(0px 1px 15px $light_sky_blue_shadow);
 }
-
 .calculator-table {
   td,
   th {
@@ -86,9 +138,18 @@ body {
     min-width: 80px;
   }
 }
-
 @include breakpoint-lt('sm') {
   .calculator-submit {
     width: 100%;
   }
+}
+
+/******* TOASTER/SNACKBAR *******/
+.Toastify__toast {
+  font-size: 14px;
+  min-height: 52px;
+  border-radius: 5px;
+}
+.Toastify__progress-bar {
+  height: 4px;
 }

@@ -31,7 +31,8 @@ $breakpoints: (
   //targeting >=768px tablets
   'lg': 992px,
   //targeting >=992px tablets
-  'xl': 1200px //targeting >=1200px tablets,,,,,,,,,,,,,,
+  'xl': 1200px,
+  //targeting >=1200px tablets
 );
 @mixin breakpoint-lt($to) {
   @media (max-width: em(map-get($breakpoints, $to) - 1px, 16px)) {

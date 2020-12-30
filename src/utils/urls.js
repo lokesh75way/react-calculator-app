@@ -7,6 +7,9 @@ const URLS = {
   LOCATION: {
     LOCATIONS: `${API_URL}/locations`,
   },
+  CART: {
+    ADD_CART: `${API_URL}/cart`,
+  },
 };
 
 export default URLS;
