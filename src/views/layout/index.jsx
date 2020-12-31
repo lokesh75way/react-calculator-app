@@ -16,9 +16,9 @@ const Layout = () => {
   }, []);
 
   return (
-    <>
+    <div data-testid="layout-component">
       <Routes />
-    </>
+    </div>
   );
 };
 

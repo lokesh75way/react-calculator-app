@@ -11,6 +11,13 @@ import {
 } from 'react-bootstrap';
 import { RiDeleteBin6Line as RemoveIcon } from 'react-icons/ri';
 import { httpGet, httpPost } from '../../utils/https';
+import {
+  formatLocations,
+  calculateTotalCost,
+  calculateTotalUnits,
+  calculateMaxProductions,
+  calculateLocationFormData,
+} from './index.functions';
 import URLS from '../../utils/urls';
 import Map from '../../components/map';
 import DatePicker from 'react-datepicker';
@@ -37,29 +44,20 @@ const Calculator = () => {
   const [isSubmit, setIsSubmit] = useStateCallback(false);
   const [formattedLocations, setFormattedLocations] = useState([]);
 
-  const formatLocations = (data = []) => {
-    const locationLatLongs = [];
-    const formattedData = [];
-    if (data.length > 0) {
-      data.forEach((locData) => {
-        if (!locationLatLongs.includes(`${locData.lat}-${locData.long}`)) {
-          locationLatLongs.push(`${locData.lat}-${locData.long}`);
-          const getData = data.filter(
-            (loc) => loc.lat === locData.lat && loc.long === locData.long
-          );
-          formattedData.push({ [`${locData.lat}-${locData.long}`]: getData });
-        }
-      });
-    }
-    setFormattedLocations(formattedData);
-  };
+  useEffect(() => {
+    const productUrl = URLS.PRODUCT.PRODUCTS;
+    httpGet(productUrl, { trace_name: 'get_products' }).then((res) => {
+      setProducts(res);
+    });
+  }, []);
 
   const openMap = () => {
     if (locations && locations.length === 0) {
       const location_url = URLS.LOCATION.LOCATIONS;
       httpGet(location_url, { trace_name: 'get_locations' }).then((res) => {
         setLocations(res);
-        formatLocations(res);
+        const formattedData = formatLocations(res);
+        setFormattedLocations(formattedData);
       });
     }
 
@@ -74,76 +72,8 @@ const Calculator = () => {
     setShowMap(false);
   };
 
-  useEffect(() => {
-    const productUrl = URLS.PRODUCT.PRODUCTS;
-    httpGet(productUrl, { trace_name: 'get_products' }).then((res) => {
-      setProducts(res);
-    });
-  }, []);
-
-  const calculateMaxProductions = () => {
-    const startDate = moment(
-      moment(CALENDER_CONFIG.START_DATE).format('DD.MM.YYYY'),
-      'DD.MM.YYYY'
-    );
-    const selectedDate = moment(
-      moment(formData.date).format('DD.MM.YYYY'),
-      'DD.MM.YYYY'
-    );
-    const selectedDay = selectedDate.diff(startDate, 'days') + 1;
-    let maxProduction = 0;
-    if (formData.product?.max_production) {
-      const { max_production: production } = formData.product;
-      if (production[selectedDay] !== undefined) {
-        maxProduction = production[selectedDay];
-      } else {
-        maxProduction = production[Object.keys(production).length] || 0;
-      }
-    }
-    return maxProduction;
-  };
-
-  const calculateLocationFormData = (location) => {
-    const maxProduction = calculateMaxProductions();
-    let maxDist = 0;
-    const totalUnits = getTotalUnits();
-    maxDist = totalUnits + location?.max_dist || 0;
-    if (maxDist > maxProduction) {
-      showErrorMsg(
-        `You can distribute maximum ${maxProduction} items(units) on ${moment(
-          formData.date
-        ).format('DD-MMM-YY')}`
-      );
-      return formData.locations;
-    }
-    return [...formData.locations, location];
-  };
-
-  const getTotalUnits = () => {
-    let totalUnits = 0;
-    if (formData.locations.length > 0 && formData.locations.length > 0) {
-      formData.locations.forEach((loc) => {
-        totalUnits = totalUnits + Number(loc.max_dist);
-      });
-    }
-    return totalUnits;
-  };
-
-  const getTotalCost = () => {
-    let totalCost = 0;
-    if (formData.locations.length > 0 && formData.locations.length > 0) {
-      formData.locations.forEach((loc) => {
-        totalCost =
-          totalCost +
-          Number((loc.max_dist > 0 && loc.fee) || 0) +
-          Number(loc.max_dist) * Number(formData.product?.price_per_unit || 0);
-      });
-    }
-    return totalCost;
-  };
-
   const addLocation = (location) => {
-    const calculatedData = calculateLocationFormData(location);
+    const calculatedData = calculateLocationFormData(location, formData);
     setFormData({ ...formData, locations: calculatedData });
     closeMap();
   };
@@ -187,8 +117,8 @@ const Calculator = () => {
       errorMaxProduction: '',
       errorLocation: '',
     };
-    const maxProduction = calculateMaxProductions();
-    const totalUnits = getTotalUnits();
+    const maxProduction = calculateMaxProductions(formData);
+    const totalUnits = calculateTotalUnits(formData);
     if (totalUnits > maxProduction) {
       errorStructure.errorMaxProduction = `You can distribute maximum ${maxProduction} items(units) on ${moment(
         formData.date
@@ -263,11 +193,11 @@ const Calculator = () => {
     errorMaxProduction,
     errorLocation,
   } = checkValidations();
-  const totalUnits = getTotalUnits();
-  const totalCost = getTotalCost();
+  const totalUnits = calculateTotalUnits(formData);
+  const totalCost = calculateTotalCost(formData);
 
   return (
-    <>
+    <div data-testid="calculator-component">
       <Container>
         <Card className="mt-4 calculator">
           <Card.Header className="bg-primary text-white">
@@ -287,6 +217,7 @@ const Calculator = () => {
                       className="text-dark-blue"
                       onChange={selectProduct}
                       value={formData.product?.id || ''}
+                      data-testid="select-dropdown"
                     >
                       <option value="" disabled={formData.locations.length > 0}>
                         Select Product
@@ -308,7 +239,7 @@ const Calculator = () => {
                     <Form.Label className="text-sky-blue">
                       Select Date
                     </Form.Label>
-                    <div>
+                    <div data-testid="date-picker">
                       <DatePicker
                         popperPlacement="top-end"
                         placeholderText="Select Date"
@@ -335,6 +266,7 @@ const Calculator = () => {
                         variant="success"
                         className="px-4"
                         size="sm"
+                        data-testid="open-map"
                         onClick={openMap}
                       >
                         Add
@@ -369,6 +301,7 @@ const Calculator = () => {
                                   onChange={(e) =>
                                     handleLocationUnits(e, loc.id)
                                   }
+                                  data-testid="location-unit"
                                 />
                               </td>
                               <td className="cost table-min-80">
@@ -443,6 +376,7 @@ const Calculator = () => {
                   errorMaxProduction ||
                   totalUnits === 0
                 }
+                data-testid="submit-btn"
               >
                 {formData.isLoading ? 'Loading...' : 'Submit'}
               </Button>
@@ -460,7 +394,7 @@ const Calculator = () => {
           closeMap={closeMap}
         />
       </Modal>
-    </>
+    </div>
   );
 };
 

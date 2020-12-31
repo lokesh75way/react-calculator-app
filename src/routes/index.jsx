@@ -5,10 +5,12 @@ import NotFound from './404';
 
 const Routes = () => {
   return (
-    <Switch>
-      <Route path="/" exact component={Calculator} />
-      <Route component={NotFound} />
-    </Switch>
+    <div data-testid="routes-component">
+      <Switch>
+        <Route path="/" exact component={Calculator} />
+        <Route component={NotFound} />
+      </Switch>
+    </div>
   );
 };
 

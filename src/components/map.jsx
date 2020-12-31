@@ -13,7 +13,7 @@ import {
 const Map = compose(
   withProps({
     googleMapURL: process.env.REACT_APP_GOOGLE_MAP_URL,
-    loadingElement: <div className="h-100" />,
+    loadingElement: <div className="h-100" data-testid="map-component" />,
     containerElement: <div className="map-container-element" />,
     mapElement: <div className="h-100" />,
   }),
@@ -30,7 +30,7 @@ const Map = compose(
   } = props;
 
   return (
-    <>
+    <div>
       {data && data.length > 0 ? (
         <GoogleMap
           defaultZoom={15}
@@ -140,7 +140,7 @@ const Map = compose(
           Sorry, Locations not found
         </div>
       )}
-    </>
+    </div>
   );
 });
 
