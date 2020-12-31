@@ -18,6 +18,7 @@ import { useStateCallback } from '../../utils/helpers';
 import { showErrorMsg, showSuccessMsg } from '../../utils/notifications';
 import { CALENDER_CONFIG } from '../../config/constants';
 import 'react-datepicker/dist/react-datepicker.css';
+import './index.scss';
 
 const moment = require('moment');
 
@@ -34,12 +35,31 @@ const Calculator = () => {
   const [locations, setLocations] = useState([]);
   const [showMap, setShowMap] = useState(false);
   const [isSubmit, setIsSubmit] = useStateCallback(false);
+  const [formattedLocations, setFormattedLocations] = useState([]);
+
+  const formatLocations = (data = []) => {
+    const locationLatLongs = [];
+    const formattedData = [];
+    if (data.length > 0) {
+      data.forEach((locData) => {
+        if (!locationLatLongs.includes(`${locData.lat}-${locData.long}`)) {
+          locationLatLongs.push(`${locData.lat}-${locData.long}`);
+          const getData = data.filter(
+            (loc) => loc.lat === locData.lat && loc.long === locData.long
+          );
+          formattedData.push({ [`${locData.lat}-${locData.long}`]: getData });
+        }
+      });
+    }
+    setFormattedLocations(formattedData);
+  };
 
   const openMap = () => {
     if (locations && locations.length === 0) {
       const location_url = URLS.LOCATION.LOCATIONS;
       httpGet(location_url, { trace_name: 'get_locations' }).then((res) => {
         setLocations(res);
+        formatLocations(res);
       });
     }
 
@@ -115,7 +135,7 @@ const Calculator = () => {
       formData.locations.forEach((loc) => {
         totalCost =
           totalCost +
-          Number(loc.fee) +
+          Number((loc.max_dist > 0 && loc.fee) || 0) +
           Number(loc.max_dist) * Number(formData.product?.price_per_unit || 0);
       });
     }
@@ -204,11 +224,13 @@ const Calculator = () => {
         const { isValidate } = formData;
         if (!isValidate) return;
         const date = moment(formData.date).format('YYYY-MM-DD');
-        const product = formData.product.id;
-        const locations = formData.locations.map((loc) => ({
-          id: loc.id,
-          quantity: loc.max_dist,
-        }));
+        const product = Number(formData.product.id);
+        const locations = formData.locations
+          .map((loc) => ({
+            id: Number(loc.id),
+            quantity: Number(loc.max_dist),
+          }))
+          .filter((data) => Boolean(data.quantity));
         const params = {
           date,
           product,
@@ -351,7 +373,7 @@ const Calculator = () => {
                               </td>
                               <td className="cost table-min-80">
                                 <span>
-                                  {loc.fee +
+                                  {((loc.max_dist > 0 && loc.fee) || 0) +
                                     (loc.max_dist *
                                       formData.product?.price_per_unit || 0)}
                                 </span>
@@ -388,7 +410,9 @@ const Calculator = () => {
                     )}
                   </Form.Group>
                 </Col>
-                {(Boolean(totalUnits) || Boolean(totalCost)) && (
+                {((formData.locations && formData.locations.length > 0) ||
+                  Boolean(totalUnits) ||
+                  Boolean(totalCost)) && (
                   <>
                     <Col xs={12} sm={4}>
                       <Form.Group>
@@ -416,7 +440,8 @@ const Calculator = () => {
                 disabled={
                   formData.isLoading ||
                   (isSubmit && !formData.isValidate) ||
-                  errorMaxProduction
+                  errorMaxProduction ||
+                  totalUnits === 0
                 }
               >
                 {formData.isLoading ? 'Loading...' : 'Submit'}
@@ -429,6 +454,7 @@ const Calculator = () => {
         <Map
           isMarkerShown={true}
           data={locations}
+          formattedLocations={formattedLocations}
           addedLocations={formData.locations}
           addLocation={addLocation}
           closeMap={closeMap}

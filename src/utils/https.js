@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { MESSAGES } from '../config/constants';
+import { showErrorMsg } from './notifications';
 
 /**
  * CANCEL TOKEN
@@ -103,70 +104,70 @@ export const httpHandleError = (error) => {
     if (xhr) {
       switch (xhr.status) {
         case 0:
-          alert(MESSAGES.SERVER_ERROR);
+          showErrorMsg(MESSAGES.SERVER_ERROR);
           break;
 
         case 400:
           if (err.error) {
-            alert(err.error[0].message);
+            showErrorMsg(err.error[0].message);
           } else if (!err.status && !err.error && err.response) {
-            alert(err.response);
+            showErrorMsg(err.response);
           } else {
-            alert(MESSAGES.INTERNAL_ERROR);
+            showErrorMsg(MESSAGES.INTERNAL_ERROR);
           }
           break;
 
         case 401:
-          alert(xhr.statusText);
+          showErrorMsg(xhr.statusText);
           break;
 
         case 403:
-          alert('You do not have access.');
+          showErrorMsg(MESSAGES.UNAUTHORIZED);
           break;
 
         case 404:
-          alert(err.response);
+          showErrorMsg(MESSAGES.NOT_FOUND);
           break;
 
         case 412:
           if (Object.keys(err.errors)[0] === 'q') {
-            alert('Please enter valid location.');
+            showErrorMsg('Please enter valid location.');
           } else {
-            alert(err.errors[Object.keys(err.errors)[0]][0]);
+            showErrorMsg(err.errors[Object.keys(err.errors)[0]][0]);
           }
           break;
 
         case 422:
           if (err.errors && err.errors[0] && err.errors[0].detail) {
-            alert(err.errors[0].detail);
+            showErrorMsg(err.errors[0].detail);
           } else if (Array.isArray(err.message)) {
-            alert(err.message[0]);
+            showErrorMsg(err.message[0]);
           } else if (err.message) {
-            alert(err.message);
+            showErrorMsg(err.message);
           } else if (err.error && typeof err.error == 'string') {
-            alert(err.error);
+            showErrorMsg(err.error);
           } else {
-            alert(err[Object.keys(err)[0]]);
+            showErrorMsg(err[Object.keys(err)[0]]);
           }
           break;
 
         case 502:
-          alert(MESSAGES.BAD_GATEWAY);
+          showErrorMsg(MESSAGES.BAD_GATEWAY);
           break;
 
         case 503:
           if (err.error && typeof err.error == 'string') {
-            alert(err.error);
+            showErrorMsg(err.error);
           } else {
-            alert(MESSAGES.BAD_GATEWAY);
+            showErrorMsg(MESSAGES.BAD_GATEWAY);
           }
           break;
 
         default:
-          alert(MESSAGES.INTERNAL_ERROR);
+          showErrorMsg(MESSAGES.INTERNAL_ERROR);
       }
     } else {
-      alert(MESSAGES.INTERNAL_ERROR);
+      showErrorMsg(MESSAGES.INTERNAL_ERROR);
     }
 
     return Promise.reject(err);
