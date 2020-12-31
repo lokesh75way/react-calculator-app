@@ -1,4 +1,4 @@
-import { MESSAGES } from '../configs/constants';
+import { MESSAGES } from '../config/constants';
 
 /**
  * COMMON FUNCTION TO DISPLAY SUCCESS MESSAGE IN SNACKBAR

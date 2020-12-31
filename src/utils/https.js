@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { MESSAGES } from '../configs/constants';
+import { MESSAGES } from '../config/constants';
 
 /**
  * CANCEL TOKEN

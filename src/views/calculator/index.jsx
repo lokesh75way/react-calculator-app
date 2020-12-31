@@ -16,7 +16,7 @@ import Map from '../../components/map';
 import DatePicker from 'react-datepicker';
 import { useStateCallback } from '../../utils/helpers';
 import { showErrorMsg, showSuccessMsg } from '../../utils/notifications';
-import { CALENDER_CONFIG } from '../../configs/constants';
+import { CALENDER_CONFIG } from '../../config/constants';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const moment = require('moment');
@@ -62,8 +62,14 @@ const Calculator = () => {
   }, []);
 
   const calculateMaxProductions = () => {
-    const startDate = moment(CALENDER_CONFIG.START_DATE, 'M/D/YYYY');
-    const selectedDate = moment(formData.date, 'M/D/YYYY');
+    const startDate = moment(
+      moment(CALENDER_CONFIG.START_DATE).format('DD.MM.YYYY'),
+      'DD.MM.YYYY'
+    );
+    const selectedDate = moment(
+      moment(formData.date).format('DD.MM.YYYY'),
+      'DD.MM.YYYY'
+    );
     const selectedDay = selectedDate.diff(startDate, 'days') + 1;
     let maxProduction = 0;
     if (formData.product?.max_production) {
@@ -84,7 +90,9 @@ const Calculator = () => {
     maxDist = totalUnits + location?.max_dist || 0;
     if (maxDist > maxProduction) {
       showErrorMsg(
-        `You can distribute maximum ${maxProduction} items(units) a day`
+        `You can distribute maximum ${maxProduction} items(units) on ${moment(
+          formData.date
+        ).format('DD-MMM-YY')}`
       );
       return formData.locations;
     }
@@ -162,7 +170,9 @@ const Calculator = () => {
     const maxProduction = calculateMaxProductions();
     const totalUnits = getTotalUnits();
     if (totalUnits > maxProduction) {
-      errorStructure.errorMaxProduction = `You can distribute maximum ${maxProduction} item(units) a day`;
+      errorStructure.errorMaxProduction = `You can distribute maximum ${maxProduction} items(units) on ${moment(
+        formData.date
+      ).format('DD-MMM-YYYY')}`;
     }
 
     if (!isSubmit) return errorStructure;
@@ -403,7 +413,11 @@ const Calculator = () => {
                 variant="primary"
                 className="px-5 calculator-submit"
                 onClick={formSubmit}
-                disabled={formData.isLoading}
+                disabled={
+                  formData.isLoading ||
+                  (isSubmit && !formData.isValidate) ||
+                  errorMaxProduction
+                }
               >
                 {formData.isLoading ? 'Loading...' : 'Submit'}
               </Button>
