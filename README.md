@@ -1,15 +1,23 @@
 # React Calculator App
 
-## Setup
+## Prerequisite
 
 1. Install node from https://nodejs.org/en/download/
+2. Update `.env` file with your google api key(REACT_APP_GOOGLE_KEY) in order to load the google map properly
+3. Intall below chrome extension to your browser (and enable it) in order to bye pass the CORS error as we are calling the API with non https :
+https://chrome.google.com/webstore/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino/related?hl=en
 
+## Setup & Run
 ```
 npm install yarn
 yarn
 ```
 
-2. Update `.env` file with your google api key(REACT_APP_GOOGLE_KEY) in order to load the google map
+To run a server in development mode
+
+```
+yarn start
+```
 
 ## Testing and Development
 
@@ -23,12 +31,6 @@ Unit Testing is done with jest to load the interactive test suite
 
 ```
 yarn test
-```
-
-To run a server in development mode
-
-```
-yarn start
 ```
 
 ## Build
